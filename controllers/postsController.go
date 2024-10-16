@@ -38,3 +38,14 @@ func CreatePost(c *gin.Context) {
 	})
 
 }
+
+func GetAllPosts(c *gin.Context) {
+	// Get the posts
+	var posts []models.Post
+	initializers.DB.Find(&posts)
+
+	// Respond with them
+	c.JSON(http.StatusOK, gin.H{
+		"posts": posts,
+	})
+}
