@@ -16,6 +16,7 @@ func main() {
 
 	router.POST("/posts", controllers.CreatePost)
 	router.GET("/posts", controllers.GetAllPosts)
+	router.GET("/posts/:id", controllers.GetSinglePost)
 	
 	router.Run()
 }

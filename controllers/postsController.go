@@ -49,3 +49,15 @@ func GetAllPosts(c *gin.Context) {
 		"posts": posts,
 	})
 }
+
+func GetSinglePost(c *gin.Context) {
+	// Get post id from route
+	id := c.Param("id")
+	// get the post from db
+	var post models.Post
+	initializers.DB.Find(&post, id)
+	// respond with the post
+	c.JSON(http.StatusOK, gin.H{
+		"post": post,
+	})
+}
