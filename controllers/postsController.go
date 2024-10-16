@@ -15,12 +15,7 @@ func CreatePost(c *gin.Context) {
 		Title string
 	}
 
-	if err := c.Bind(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to bind data",
-		})
-	}
-
+	c.Bind(&body)
 	// Create a post
 	post := models.Post{Title: body.Title, Body: body.Body}
 	result := initializers.DB.Create(&post)
@@ -31,8 +26,6 @@ func CreatePost(c *gin.Context) {
 		})
 		return
 	}
-
-	// return
 	c.JSON(http.StatusOK, gin.H{
 		"post": post,
 	})
@@ -43,7 +36,6 @@ func GetAllPosts(c *gin.Context) {
 	// Get the posts
 	var posts []models.Post
 	initializers.DB.Find(&posts)
-
 	// Respond with them
 	c.JSON(http.StatusOK, gin.H{
 		"posts": posts,
@@ -60,4 +52,30 @@ func GetSinglePost(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"post": post,
 	})
+}
+
+func UpdatePost(c *gin.Context) {
+	// Get url id
+	id := c.Param("id")
+	// Get data off request body
+	var body struct {
+		Body 	string
+		Title 	string
+	}
+
+	c.Bind(&body)
+	// Find post 
+	var post models.Post
+	initializers.DB.Find(&post, id)
+	// Update post
+	initializers.DB.Model(&post).Updates(models.Post{
+		Title: body.Title, 
+		Body: body.Body,
+	})
+
+	// Respond with post
+	c.JSON(http.StatusOK, gin.H{
+		"post": post,
+	})
+
 }
